@@ -6,10 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./planet-view.component.scss'],
 })
 export class PlanetViewComponent implements OnInit {
-
   constructor() { }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() { }
 }

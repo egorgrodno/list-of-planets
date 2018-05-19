@@ -1,5 +1,12 @@
-<mat-toolbar color="primary">List of Planets</mat-toolbar>
+<mat-toolbar color="primary" class="mat-elevation-z6 app-toolbar">
+  <div class="app-toolbar__item">
+    <mat-icon>language</mat-icon>
+    <span class="app-toolbar__item__text">List of Planets</span>
+  </div>
+</mat-toolbar>
 
 <div class="container">
-  <router-outlet></router-outlet>
+  <div class="container__element">
+    <router-outlet></router-outlet>
+  </div>
 </div>

@@ -1,3 +1,52 @@
-<p>
-  planet-list works!
-</p>
+<mat-card>
+  <h1 class="mat-headline">Planet search</h1>
+
+  <div class="table-header">
+    <mat-form-field class="table-header__filter">
+      <input #filter matInput placeholder="Filter">
+    </mat-form-field>
+  </div>
+
+  <mat-table [dataSource]="dataSource">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+    </ng-container>
+
+    <!--Population Column -->
+    <ng-container matColumnDef="population">
+      <mat-header-cell *matHeaderCellDef>Population</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.population }}</mat-cell>
+    </ng-container>
+
+    <!-- Rotation Period Column -->
+    <ng-container matColumnDef="rotation_period">
+      <mat-header-cell *matHeaderCellDef>Rotation Period</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.rotation_period }}</mat-cell>
+    </ng-container>
+
+    <!-- Orbital Period Column -->
+    <ng-container matColumnDef="orbital_period">
+      <mat-header-cell *matHeaderCellDef>Orbital Period</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.orbital_period }}</mat-cell>
+    </ng-container>
+
+    <!-- Diameter Column -->
+    <ng-container matColumnDef="diameter">
+      <mat-header-cell *matHeaderCellDef>Diameter</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.diameter }}</mat-cell>
+    </ng-container>
+
+    <!-- Surface Water Column -->
+    <ng-container matColumnDef="surface_water">
+      <mat-header-cell *matHeaderCellDef>Surface Water</mat-header-cell>
+      <mat-cell *matCellDef="let element">{{ element.surface_water }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator [hidePageSize]="true" [pageSize]="10"></mat-paginator>
+</mat-card>
