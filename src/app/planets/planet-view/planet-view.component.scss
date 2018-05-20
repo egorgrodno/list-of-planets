@@ -32,7 +32,6 @@
   }
 }
 
-
 // --------------------
 // Page heading
 // --------------------
@@ -44,4 +43,11 @@
 
 .page-heading__text {
   margin: 0 0 0 12px;
+}
+
+// --------------------
+// Loading block
+// --------------------
+.loading-block__spinner {
+  margin: 65px auto;
 }

@@ -2,10 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
-import { map, shareReplay, take } from 'rxjs/operators';
+import { delay, map, shareReplay, take } from 'rxjs/operators';
 
 import { API_BASE_URL, CommonEntity, EntityNameType, ResponseDataInterface } from './entity.service';
 import { PlanetInterface } from '../planets/planet.interface';
+
+const DEFAULT_DELAY = 700;
 
 interface MockResponseDataInterface<T> {
   results: T[];
@@ -45,7 +47,7 @@ export class MockEntityService {
         const results = filteredResults.slice(sliceFromIndex, sliceFromIndex + pageSize) as any[];
         return { results, count, next: null, previous: null };
       }),
-      // take(1),
+      delay(DEFAULT_DELAY),
     );
   }
 
@@ -54,7 +56,7 @@ export class MockEntityService {
 
     return this.getMockedSource<T>(name).pipe(
       map((res) => res.results.find((item) => item.url === searchForUrl) as any),
-      take(1),
+      delay(DEFAULT_DELAY),
     );
   }
 }

@@ -1,22 +1,41 @@
 // --------------------
-// Table header
+// Table block
 // --------------------
-.table-header {
+.table-block__header {
   padding-left: 24px;
 }
 
-.table-header__filter {
+.table-block__header__filter {
   width: 100%;
 }
 
-// --------------------
-// Clickable row
-// --------------------
-.clickable-row {
+.table-block__body {
+  position: relative;
+
+  & > .mat-table {
+    transition: min-height .2s;
+  }
+}
+
+.table-block__body__row {
   cursor: pointer;
   transition: background .15s;
 
   &:hover {
     background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.table-block__loader {
+  background: rgba(0,0,0,.288);
+  position: absolute;
+  top: 57px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .mat-spinner {
+    margin: auto;
+    margin-top: 65px;
   }
 }

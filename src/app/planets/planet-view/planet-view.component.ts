@@ -1,9 +1,9 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { pluck, switchMap, takeUntil } from 'rxjs/operators';
+import { pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { AppService } from '../../shared/app.service';
 import { EntityService } from '../../shared/entity.service';
@@ -16,10 +16,12 @@ export const PLANET_VIEW_ID_PARAM = 'id';
   selector: 'app-planet-view',
   templateUrl: './planet-view.component.html',
   styleUrls: ['./planet-view.component.scss'],
+  host: { class: 'router-anim-target' },
 })
 export class PlanetViewComponent implements OnInit, OnDestroy {
   private componentLife$ = new Subject<void>();
 
+  public planetNotFound: boolean;
   public planet: PlanetInterface;
   public title: string;
 
@@ -33,15 +35,17 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.appService.title
+    this.appService.title$
       .pipe(takeUntil(this.componentLife$))
       .subscribe((newTitle) => this.title = newTitle);
 
     this.activatedRoute.params.pipe(
+      tap(() => this.appService.setTitle('Loading planet')),
+      tap(() => this.planetNotFound = false),
       takeUntil(this.componentLife$),
       pluck(PLANET_VIEW_ID_PARAM),
       switchMap((id) =>
-        (this.appService.useApi.value ? this.entityService : this.mockEntityService).viewEntity('planets', id as string)),
+        (this.appService.useApi$.value ? this.entityService : this.mockEntityService).viewEntity('planets', id as string)),
     )
     .subscribe((planet) => this.setPlanet(planet));
   }
@@ -52,8 +56,13 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
   }
 
   public setPlanet(newPlanet: PlanetInterface): void {
-    this.planet = newPlanet;
-    this.appService.setTitle(`Planet "${newPlanet.name}"`);
+    if (newPlanet) {
+      this.planet = newPlanet;
+      this.appService.setTitle(`Planet "${newPlanet.name}"`);
+    } else {
+      this.planetNotFound = true;
+      this.appService.setTitle(`Whoops! Planet not found...`);
+    }
   }
 
   public onBackBtnClick(): void {

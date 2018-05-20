@@ -18,11 +18,17 @@
 // Container
 // --------------------
 .container {
-  margin-top: 56px;
-  padding: 20px 70px;
+  padding: 20px 70px 0 70px;
+  position: absolute;
+  top: 56px;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: scroll;
 }
 
 .container__element {
   max-width: 900px;
   margin: auto;
+  position: relative;
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatPaginatorModule, MatTableModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatIconModule, MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatTableModule } from '@angular/material';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -18,6 +18,7 @@ import { ScientificNotationPipe } from './pipes/scientific-notation.pipe';
     MatIconModule,
     MatInputModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
     MatTableModule,
   ],
   declarations: [

@@ -1,55 +1,65 @@
 <mat-card>
   <h1 class="mat-headline">Planet search</h1>
 
-  <div class="table-header">
-    <mat-form-field class="table-header__filter">
-      <input #filter matInput placeholder="Filter">
-    </mat-form-field>
+  <div class="table-block">
+    <div class="table-block__header">
+      <mat-form-field class="table-block__header__filter">
+        <input #filter matInput placeholder="Filter">
+      </mat-form-field>
+    </div>
+
+    <div class="table-block__body">
+      <mat-table [dataSource]="dataSource" [style.minHeight]="getMinHeight()" [@tableRowAnim]="dataSource.isLoading$ | async">
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+        </ng-container>
+
+        <!--Population Column -->
+        <ng-container matColumnDef="population">
+          <mat-header-cell *matHeaderCellDef>Population</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.population | scientificNotation }}</mat-cell>
+        </ng-container>
+
+        <!-- Rotation Period Column -->
+        <ng-container matColumnDef="rotation_period">
+          <mat-header-cell *matHeaderCellDef>Rotation Period</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.rotation_period | appendNum:' hours':' hour' }}</mat-cell>
+        </ng-container>
+
+        <!-- Orbital Period Column -->
+        <ng-container matColumnDef="orbital_period">
+          <mat-header-cell *matHeaderCellDef>Orbital Period</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.orbital_period | appendNum:' hours':' hour' }}</mat-cell>
+        </ng-container>
+
+        <!-- Diameter Column -->
+        <ng-container matColumnDef="diameter">
+          <mat-header-cell *matHeaderCellDef>Diameter</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.diameter | appendNum:' km' }}</mat-cell>
+        </ng-container>
+
+        <!-- Surface Water Column -->
+        <ng-container matColumnDef="surface_water">
+          <mat-header-cell *matHeaderCellDef>Surface Water</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.surface_water | appendNum:'%' }}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row class="table-block__body__row" *matRowDef="let row; columns: displayedColumns;"
+          [routerLink]="['/planets', getPlanetId(row)]"></mat-row>
+      </mat-table>
+
+      <div class="table-block__loader" *ngIf="dataSource.isLoading$ | async" @loaderAnim>
+        <mat-spinner color="primary"></mat-spinner>
+      </div>
+    </div>
+
+    <div class="table-block__footer">
+      <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"></mat-paginator>
+    </div>
   </div>
-
-  <mat-table [dataSource]="dataSource">
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
-    </ng-container>
-
-    <!--Population Column -->
-    <ng-container matColumnDef="population">
-      <mat-header-cell *matHeaderCellDef>Population</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.population | scientificNotation }}</mat-cell>
-    </ng-container>
-
-    <!-- Rotation Period Column -->
-    <ng-container matColumnDef="rotation_period">
-      <mat-header-cell *matHeaderCellDef>Rotation Period</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.rotation_period | appendNum:' hours':' hour' }}</mat-cell>
-    </ng-container>
-
-    <!-- Orbital Period Column -->
-    <ng-container matColumnDef="orbital_period">
-      <mat-header-cell *matHeaderCellDef>Orbital Period</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.orbital_period | appendNum:' hours':' hour' }}</mat-cell>
-    </ng-container>
-
-    <!-- Diameter Column -->
-    <ng-container matColumnDef="diameter">
-      <mat-header-cell *matHeaderCellDef>Diameter</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.diameter | appendNum:' km' }}</mat-cell>
-    </ng-container>
-
-    <!-- Surface Water Column -->
-    <ng-container matColumnDef="surface_water">
-      <mat-header-cell *matHeaderCellDef>Surface Water</mat-header-cell>
-      <mat-cell *matCellDef="let element">{{ element.surface_water | appendNum:'%' }}</mat-cell>
-    </ng-container>
-
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row class="clickable-row" *matRowDef="let row; columns: displayedColumns;"
-      [routerLink]="['/planets', getPlanetId(row)]"></mat-row>
-  </mat-table>
-
-  <mat-paginator
-    [pageSizeOptions]="pageSizeOptions"
-    [showFirstLastButtons]="true"></mat-paginator>
 </mat-card>

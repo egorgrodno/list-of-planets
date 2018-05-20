@@ -8,7 +8,13 @@
     <h1 class="page-heading__text">{{ title }}</h1>
   </div>
 
-  <div class="mat-body-1 section-list" *ngIf="planet">
+  <ng-template #noPlanetBlock>
+    <div class="loading-block" *ngIf="!planetNotFound">
+      <mat-spinner class="loading-block__spinner" color="primary"></mat-spinner>
+    </div>
+  </ng-template>
+
+  <div class="mat-body-1 section-list" *ngIf="planet; else noPlanetBlock">
     <div class="section-list__item">
       <div class="section-list__item__content">
         <p>Rotation period: <b>{{ planet.rotation_period | appendNum:' hours':' hour' }}</b></p>

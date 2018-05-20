@@ -20,6 +20,7 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
   private filterSub: Subscription;
 
   public onInput: Observable<DataSourceInputDataInterface>;
+  public isLoading$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private entityName: EntityNameType,
@@ -69,9 +70,11 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
    */
   public connect(): Observable<T[]> {
     return this.onInput.pipe(
+        tap((res) => this.isLoading$.next(true)),
         switchMap((inputData) => this.entityService
           .listEntities<T>(this.entityName, inputData.filter, inputData.pageNumber, inputData.pageSize)),
         tap((res) => this.paginator.length = res.count),
+        tap((res) => this.isLoading$.next(false)),
         map((res) => res.results),
       );
   }
@@ -81,5 +84,6 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
    */
   public disconnect() {
     this.filterSub.unsubscribe();
+    this.isLoading$.complete();
   }
 }

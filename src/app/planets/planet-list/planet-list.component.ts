@@ -1,11 +1,12 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatTable } from '@angular/material';
 import { Subscription } from 'rxjs';
 
 import { AppService } from '../../shared/app.service';
 import { DataSourceInputDataInterface, TableDataSource } from '../../shared/table-data-source';
 import { EntityService } from '../../shared/entity.service';
+import { LOADER_ANIM, TABLE_ROW_ANIM } from './planet-list.animations';
 import { MockEntityService } from '../../shared/mock-entity.service';
 import { PlanetInterface } from '../planet.interface';
 
@@ -19,6 +20,9 @@ const PAGE_SIZE_PROP_NAME = 'ps';
   selector: 'app-planet-list',
   templateUrl: './planet-list.component.html',
   styleUrls: ['./planet-list.component.scss'],
+  host: { class: 'router-anim-target' },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [ LOADER_ANIM, TABLE_ROW_ANIM ],
 })
 export class PlanetListComponent implements OnInit, OnDestroy {
   public displayedColumns = ['name', 'population', 'rotation_period', 'orbital_period', 'diameter', 'surface_water'];
@@ -28,6 +32,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
   private useApiSub: Subscription;
   private dataSourceInputSub: Subscription;
 
+  @ViewChild(MatTable) table: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('filter') filterEl: ElementRef;
 
@@ -42,7 +47,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.appService.setTitle('Planet Search');
 
-    this.useApiSub = this.appService.useApi.subscribe((useApi) => {
+    this.useApiSub = this.appService.useApi$.subscribe((useApi) => {
       if (this.dataSourceInputSub) {
         this.dataSourceInputSub.unsubscribe();
       }
@@ -110,5 +115,13 @@ export class PlanetListComponent implements OnInit, OnDestroy {
       [PAGE_NUMBER_PROP_NAME]: inputData.pageNumber,
       [PAGE_SIZE_PROP_NAME]: inputData.pageSize,
     };
+  }
+
+  public getMinHeight(): string {
+    if (this.paginator.pageSize <= 10) {
+      return `${this.paginator.pageSize * 49 + 57}px`;
+    }
+
+    return '0px';
   }
 }
