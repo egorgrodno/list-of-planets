@@ -7,17 +7,11 @@
   left: 0;
   right: 0;
   z-index: 1;
-  justify-content: center;
   height: 56px;
 }
 
-.app-toolbar__item {
-  display: flex;
-  align-items: center;
-}
-
-.app-toolbar__item__text {
-  padding-left: 3px;
+.app-toolbar__spacer {
+  flex: 1 1 auto;
 }
 
 // --------------------

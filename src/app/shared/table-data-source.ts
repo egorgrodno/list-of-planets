@@ -1,66 +1,85 @@
 import { BehaviorSubject, Observable, Subscription, fromEvent, merge } from 'rxjs';
+import { DataSource } from '@angular/cdk/collections';
 import { ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 
-import { EntityNameType, EntityService } from './entity.service';
+import { CommonEntity, EntityNameType, EntityService } from './entity.service';
+import { MockEntityService } from './mock-entity.service';
 
-export class TableDataSource<T> {
-  private filter$ = new BehaviorSubject<string>('');
+const DEBOUNCE_TIME_DEFAULT = 350;
+
+export interface DataSourceInputDataInterface {
+  filter: string;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
+  private filter$: BehaviorSubject<string>;
   private filterSub: Subscription;
-  private paginator: MatPaginator;
+
+  public onInput: Observable<DataSourceInputDataInterface>;
 
   constructor(
     private entityName: EntityNameType,
-    private entityService: EntityService,
-  ) { }
+    private entityService: EntityService | MockEntityService,
+    private paginator: MatPaginator,
+    private filterEl: ElementRef,
+    private inputDataDefault: DataSourceInputDataInterface,
+  ) {
+    super();
+    /**
+     * Setup default values
+     */
+    this.filter$ = new BehaviorSubject<string>(inputDataDefault.filter);
+    this.paginator.pageIndex = inputDataDefault.pageNumber - 1;
+    this.paginator.pageSize = inputDataDefault.pageSize;
 
-  public connectPaginator(paginator: MatPaginator): void {
-    this.paginator = paginator;
-  }
-
-  public connectFilter(el: ElementRef): void {
-    this.filterSub = fromEvent<Event>(el.nativeElement, 'input').pipe(
-      debounceTime(500),
-      map((event) => (event.target as HTMLInputElement).value),
-      filter((value) => value !== this.filter$.value)
+    /**
+     * Subscribe to input element (filter)
+     */
+    this.filterSub = fromEvent<Event>(this.filterEl.nativeElement, 'input').pipe(
+      debounceTime(DEBOUNCE_TIME_DEFAULT),
+      map((event) => (event.target as HTMLInputElement).value.trim()),
+      filter((value) => value !== this.filter$.value),
     ).subscribe((value) => {
-      if (this.paginator) {
-        this.paginator.pageIndex = 0;
-      }
+      this.paginator.pageIndex = 0;
       this.filter$.next(value);
     });
+
+    /**
+     * Create public observable
+     * Component subscribes to this variable to update it's route path
+     */
+    this.onInput = merge(this.paginator.page, this.filter$)
+      .pipe(
+        map(() => {
+          return {
+            filter: this.filter$.value,
+            pageNumber: this.paginator.pageIndex + 1,
+            pageSize: this.paginator.pageSize,
+          };
+        }),
+      );
   }
 
+  /**
+   * mat-table hook (subscribes on init)
+   */
   public connect(): Observable<T[]> {
-    const observables = [] as Observable<any>[];
-
-    if (this.paginator) {
-      observables.push(this.paginator.page);
-    }
-    if (this.filterSub) {
-      observables.push(this.filter$);
-    }
-
-    return merge(...observables)
-      .pipe(
-        switchMap(() => {
-          const filter = this.filter$ ? this.filter$.value : '';
-          const pageNumber = this.paginator ? this.paginator.pageIndex + 1 : 1;
-          return this.entityService.listEntities<T>(this.entityName, filter, pageNumber)
-        }),
-        tap((res) => {
-          if (this.paginator) {
-            this.paginator.length = res.count;
-          }
-        }),
+    return this.onInput.pipe(
+        switchMap((inputData) => this.entityService
+          .listEntities<T>(this.entityName, inputData.filter, inputData.pageNumber, inputData.pageSize)),
+        tap((res) => this.paginator.length = res.count),
         map((res) => res.results),
       );
   }
 
+  /**
+   * mat-table hook (unsubscribes on destroy)
+   */
   public disconnect() {
-    if (this.filterSub) {
-      this.filterSub.unsubscribe();
-    }
+    this.filterSub.unsubscribe();
   }
 }

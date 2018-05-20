@@ -1,11 +1,8 @@
-type UriType = string;
-type IsoDateType = string;
+import { CommonEntity, IsoDateType, UriType } from '../shared/entity.service';
 
-export interface PlanetInterface {
+export interface PlanetInterface extends CommonEntity {
   climate: string; // The climate of this planet. Comma-seperated if diverse.
-  created: IsoDateType; // The ISO 8601 date format of the time that this resource was created.
   diameter: string; // The diameter of this planet in kilometers.
-  edited: IsoDateType; // The ISO 8601 date format of the time that this resource was edited.
   films: UriType[]; // An array of Film URL Resources that this planet has appeared in.
   gravity: string; // A number denoting the gravity of this planet. Where 1 is normal.
   name: string; // The name of this planet.
@@ -15,5 +12,4 @@ export interface PlanetInterface {
   rotation_period: string; // The number of standard hours it takes for this planet to complete a single rotation on its axis.
   surface_water: string; // The percentage of the planet surface that is naturally occuring water or bodies of water.
   terrain: string; // the terrain of this planet. Comma-seperated if diverse.
-  url: UriType; // The hypermedia URL of this resource.
 }

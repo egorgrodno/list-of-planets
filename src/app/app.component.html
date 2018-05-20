@@ -1,8 +1,22 @@
 <mat-toolbar color="primary" class="mat-elevation-z6 app-toolbar">
-  <div class="app-toolbar__item">
+  <button mat-button class="icon-button" routerLink="/planets">
     <mat-icon>language</mat-icon>
-    <span class="app-toolbar__item__text">List of Planets</span>
-  </div>
+    Planets
+  </button>
+
+  <div class="app-toolbar__spacer"></div>
+
+  <button mat-button class="icon-button" (click)="toggleUseApi()">
+    <ng-container *ngIf="appService.useApi | async; else usingMockDataBlock">
+      <mat-icon>link</mat-icon>
+      Using API
+    </ng-container>
+
+    <ng-template #usingMockDataBlock>
+      <mat-icon>link_off</mat-icon>
+      Using mock data
+    </ng-template>
+  </button>
 </mat-toolbar>
 
 <div class="container">

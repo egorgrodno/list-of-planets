@@ -1,3 +1,49 @@
-<p>
-  planet-view works!
-</p>
+<mat-card>
+  <div class="page-heading">
+    <button mat-raised-button color="primary" class="icon-button"
+      (click)="onBackBtnClick()">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      Back
+    </button>
+    <h1 class="page-heading__text">{{ title }}</h1>
+  </div>
+
+  <div class="mat-body-1 section-list" *ngIf="planet">
+    <div class="section-list__item">
+      <div class="section-list__item__content">
+        <p>Rotation period: <b>{{ planet.rotation_period | appendNum:' hours':' hour' }}</b></p>
+        <p>Orbital period: <b>{{ planet.orbital_period | appendNum:' hours':' hour' }}</b></p>
+      </div>
+    </div>
+
+    <div class="section-list__item">
+      <div class="section-list__item__content">
+        <p>Diameter: <b>{{ planet.diameter | appendNum:' km' }}</b></p>
+        <p>Gravity: <b>{{ planet.gravity }}</b></p>
+      </div>
+    </div>
+
+    <div class="section-list__item">
+      <div class="section-list__item__content">
+        <p>Climate: <b>{{ planet.climate }}</b></p>
+        <p>Terrain: <b>{{ planet.terrain }}</b></p>
+        <p>Surface water: <b>{{ planet.surface_water | appendNum:'%' }}</b></p>
+      </div>
+    </div>
+
+    <div class="section-list__item">
+      <div class="section-list__item__content">
+        <p>Population: <b>{{ planet.population | scientificNotation }}</b></p>
+        <p>Number of residents: <b>{{ planet.residents.length }}</b></p>
+        <p>Number of films: <b>{{ planet.films.length }}</b></p>
+      </div>
+    </div>
+
+    <div class="section-list__item">
+      <div class="section-list__item__content">
+        <p>Created: <b>{{ planet.created | date:'dd.MM.yyyy HH:mm' }}</b></p>
+        <p>Edited: <b>{{ planet.edited | date:'dd.MM.yyyy HH:mm' }}</b></p>
+      </div>
+    </div>
+  </div>
+</mat-card>

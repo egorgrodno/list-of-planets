@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PlanetListComponent, PlanetViewComponent, PlanetsModule } from './planets';
+import { PLANET_VIEW_ID_PARAM, PlanetListComponent, PlanetViewComponent, PlanetsModule } from './planets';
 
 const routes: Routes = [
+  { path: `planets/:${PLANET_VIEW_ID_PARAM}`, component: PlanetViewComponent },
   { path: 'planets', component: PlanetListComponent },
-  { path: 'planet/:id', component: PlanetViewComponent },
 
   { path: '**', redirectTo: '/planets' },
 ];

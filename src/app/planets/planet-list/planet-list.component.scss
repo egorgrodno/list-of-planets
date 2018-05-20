@@ -2,9 +2,21 @@
 // Table header
 // --------------------
 .table-header {
-  padding: 8px 24px 0;
+  padding-left: 24px;
 }
 
 .table-header__filter {
   width: 100%;
+}
+
+// --------------------
+// Clickable row
+// --------------------
+.clickable-row {
+  cursor: pointer;
+  transition: background .15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
 }
