@@ -22,10 +22,10 @@ import { ScientificNotationPipe } from './pipes/scientific-notation.pipe';
     MatTableModule,
   ],
   declarations: [
+    AppendNumPipe,
     PlanetListComponent,
     PlanetViewComponent,
     ScientificNotationPipe,
-    AppendNumPipe,
   ],
 })
 export class PlanetsModule { }

@@ -1,15 +1,17 @@
 {
   "name": "list-of-planets",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Egor Zhyh <egor990095@gmail.com>",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:prod": "ng build --prod",
+    "build:docs": "ng build --prod --output-path=./docs --deploy-url=/list-of-planets/ --base-href=/list-of-planets/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^6.0.0",
     "@angular/cdk": "^6.0.0",
@@ -22,6 +24,7 @@
     "@angular/platform-browser": "^6.0.0",
     "@angular/platform-browser-dynamic": "^6.0.0",
     "@angular/router": "^6.0.0",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
