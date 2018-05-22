@@ -40,29 +40,30 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
     /**
      * Subscribe to input element (filter)
      */
-    this.filterSub = fromEvent<Event>(this.filterEl.nativeElement, 'input').pipe(
-      debounceTime(DEBOUNCE_TIME_DEFAULT),
-      map((event) => (event.target as HTMLInputElement).value.trim()),
-      filter((value) => value !== this.filter$.value),
-    ).subscribe((value) => {
-      this.paginator.pageIndex = 0;
-      this.filter$.next(value);
-    });
+    this.filterSub = fromEvent<Event>(this.filterEl.nativeElement, 'input')
+      .pipe(
+        debounceTime(DEBOUNCE_TIME_DEFAULT),
+        map((event) => (event.target as HTMLInputElement).value.trim()),
+        filter((value) => value !== this.filter$.value),
+      )
+      .subscribe((value) => {
+        this.paginator.pageIndex = 0;
+        this.filter$.next(value);
+      });
 
     /**
      * Create public observable
      * Component subscribes to this variable to update it's route path
      */
-    this.onInput = merge(this.paginator.page, this.filter$)
-      .pipe(
-        map(() => {
-          return {
-            filter: this.filter$.value,
-            pageNumber: this.paginator.pageIndex + 1,
-            pageSize: this.paginator.pageSize,
-          };
-        }),
-      );
+    this.onInput = merge(this.paginator.page, this.filter$).pipe(
+      map(() => {
+        return {
+          filter: this.filter$.value,
+          pageNumber: this.paginator.pageIndex + 1,
+          pageSize: this.paginator.pageSize,
+        };
+      }),
+    );
   }
 
   /**
@@ -70,13 +71,19 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
    */
   public connect(): Observable<T[]> {
     return this.onInput.pipe(
-        tap((res) => this.isLoading$.next(true)),
-        switchMap((inputData) => this.entityService
-          .listEntities<T>(this.entityName, inputData.filter, inputData.pageNumber, inputData.pageSize)),
-        tap((res) => this.paginator.length = res.count),
-        tap((res) => this.isLoading$.next(false)),
-        map((res) => res.results),
-      );
+      tap((res) => this.isLoading$.next(true)),
+      switchMap((inputData) =>
+        this.entityService.listEntities<T>(
+          this.entityName,
+          inputData.filter,
+          inputData.pageNumber,
+          inputData.pageSize,
+        ),
+      ),
+      tap((res) => (this.paginator.length = res.count)),
+      tap((res) => this.isLoading$.next(false)),
+      map((res) => res.results),
+    );
   }
 
   /**

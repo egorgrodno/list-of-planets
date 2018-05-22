@@ -1,5 +1,12 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, MatTable } from '@angular/material';
 import { Subscription } from 'rxjs';
 
@@ -22,10 +29,17 @@ const PAGE_SIZE_PROP_NAME = 'ps';
   styleUrls: ['./planet-list.component.scss'],
   host: { class: 'router-anim-target' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [ LOADER_ANIM, TABLE_ROW_ANIM ],
+  animations: [LOADER_ANIM, TABLE_ROW_ANIM],
 })
 export class PlanetListComponent implements OnInit, OnDestroy {
-  public displayedColumns = ['name', 'population', 'rotation_period', 'orbital_period', 'diameter', 'surface_water'];
+  public displayedColumns = [
+    'name',
+    'population',
+    'rotation_period',
+    'orbital_period',
+    'diameter',
+    'surface_water',
+  ];
   public dataSource: TableDataSource<PlanetInterface>;
   public pageSizeOptions: number[];
 
@@ -42,7 +56,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
     private entityService: EntityService,
     private mockEntityService: MockEntityService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.appService.setTitle('Planet Search');
@@ -62,8 +76,9 @@ export class PlanetListComponent implements OnInit, OnDestroy {
         this.mapParamsToInputData(this.activatedRoute.snapshot.params),
       );
 
-      this.dataSourceInputSub = this.dataSource.onInput
-        .subscribe((inputData) => this.router.navigate(['/planets', this.mapInputDataToParams(inputData)]))
+      this.dataSourceInputSub = this.dataSource.onInput.subscribe((inputData) =>
+        this.router.navigate(['/planets', this.mapInputDataToParams(inputData)]),
+      );
     });
   }
 
@@ -90,14 +105,17 @@ export class PlanetListComponent implements OnInit, OnDestroy {
       dataSourceInputData.filter = params[FILTER_PROP_NAME].trim();
     }
     if (PAGE_NUMBER_PROP_NAME in params) {
-      const pageNumber = Number(params[PAGE_NUMBER_PROP_NAME])
+      const pageNumber = Number(params[PAGE_NUMBER_PROP_NAME]);
       if (Number.isFinite(pageNumber) && pageNumber > 0) {
         dataSourceInputData.pageNumber = pageNumber;
       }
     }
     if (PAGE_SIZE_PROP_NAME in params) {
       const pageSize = Number(params[PAGE_SIZE_PROP_NAME]);
-      if (Number.isFinite(pageSize) && this.pageSizeOptions.some((pageSizeOption) => pageSizeOption === pageSize)) {
+      if (
+        Number.isFinite(pageSize) &&
+        this.pageSizeOptions.some((pageSizeOption) => pageSizeOption === pageSize)
+      ) {
         dataSourceInputData.pageSize = pageSize;
       }
     }

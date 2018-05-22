@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PLANET_VIEW_ID_PARAM, PlanetListComponent, PlanetViewComponent, PlanetsModule } from './planets';
+import {
+  PLANET_VIEW_ID_PARAM,
+  PlanetListComponent,
+  PlanetViewComponent,
+  PlanetsModule,
+} from './planets';
 
 export interface RouteDataInterface {
   pathDepth: number;
@@ -23,12 +28,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    PlanetsModule,
-    RouterModule.forRoot(routes),
-  ],
-  exports: [
-    RouterModule,
-  ],
+  imports: [PlanetsModule, RouterModule.forRoot(routes)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

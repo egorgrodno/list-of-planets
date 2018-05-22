@@ -31,9 +31,7 @@ export interface ResponseDataInterface<T> {
 export class EntityService {
   private baseUrl = API_BASE_URL;
 
-  constructor(
-    private http: HttpClient,
-  ) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Gets an id from given url and entity name
@@ -49,18 +47,25 @@ export class EntityService {
     return null;
   }
 
-  public listEntities<T extends CommonEntity>(name: EntityNameType, filter: string, pageNumber: number, pageSize: number): Observable<ResponseDataInterface<T>> {
-    const url = `${this.baseUrl}${name}/`
-    const params = new HttpParams({ fromObject: {
-      page: pageNumber.toString(),
-      search: filter,
-    } });
+  public listEntities<T extends CommonEntity>(
+    name: EntityNameType,
+    filter: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Observable<ResponseDataInterface<T>> {
+    const url = `${this.baseUrl}${name}/`;
+    const params = new HttpParams({
+      fromObject: {
+        page: pageNumber.toString(),
+        search: filter,
+      },
+    });
 
     return this.http.get<ResponseDataInterface<T>>(url, { params });
   }
 
   public viewEntity<T extends CommonEntity>(name: EntityNameType, id: string): Observable<T> {
-    const url = `${this.baseUrl}${name}/${id}/`
+    const url = `${this.baseUrl}${name}/${id}/`;
 
     return this.http.get<T>(url);
   }

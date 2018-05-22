@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -32,22 +32,27 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
     private location: Location,
     private mockEntityService: MockEntityService,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.appService.title$
       .pipe(takeUntil(this.componentLife$))
-      .subscribe((newTitle) => this.title = newTitle);
+      .subscribe((newTitle) => (this.title = newTitle));
 
-    this.activatedRoute.params.pipe(
-      tap(() => this.appService.setTitle('Loading planet')),
-      tap(() => this.planetNotFound = false),
-      takeUntil(this.componentLife$),
-      pluck(PLANET_VIEW_ID_PARAM),
-      switchMap((id) =>
-        (this.appService.useApi$.value ? this.entityService : this.mockEntityService).viewEntity('planets', id as string)),
-    )
-    .subscribe((planet) => this.setPlanet(planet));
+    this.activatedRoute.params
+      .pipe(
+        tap(() => this.appService.setTitle('Loading planet')),
+        tap(() => (this.planetNotFound = false)),
+        takeUntil(this.componentLife$),
+        pluck(PLANET_VIEW_ID_PARAM),
+        switchMap((id) =>
+          (this.appService.useApi$.value ? this.entityService : this.mockEntityService).viewEntity(
+            'planets',
+            id as string,
+          ),
+        ),
+      )
+      .subscribe((planet) => this.setPlanet(planet));
   }
 
   ngOnDestroy() {

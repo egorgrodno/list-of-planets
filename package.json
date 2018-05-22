@@ -39,7 +39,6 @@
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
     "import-sort-cli": "^4.2.0",
-    "import-sort-parser-babylon": "^4.2.0",
     "import-sort-parser-typescript": "^4.2.0",
     "import-sort-style-renke": "^4.2.0",
     "jasmine-core": "~2.99.1",
@@ -53,11 +52,5 @@
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2"
-  },
-  "importSort": {
-    ".ts": {
-      "parser": "typescript",
-      "style": "renke"
-    }
   }
 }

@@ -15,9 +15,9 @@ export class AppendNumPipe implements PipeTransform {
     }
 
     if (valueNum === 1 && appendSingle) {
-      return `${value}${appendSingle}`
+      return `${value}${appendSingle}`;
     }
 
-    return `${value}${appendMultiple}`
+    return `${value}${appendMultiple}`;
   }
 }

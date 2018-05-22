@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 const USE_API_DEFAULT = false;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppService {
   public title$ = new Subject<string>();
