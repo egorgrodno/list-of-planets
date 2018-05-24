@@ -2,18 +2,39 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { animate, group, query, style, transition, trigger } from '@angular/animations';
 import { filter, skip, take } from 'rxjs/operators';
 
 import { AppService } from './shared/app.service';
-import { ROUTER_ANIM, RouterAnimStateType } from './app.animations';
 import { RouteDataInterface } from './app-routing.module';
+
+export type RouterAnimStateType = 'from-left' | 'from-right';
+
+const animDuration = '200ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+const leftStyle = style({ transform: 'translateX(-60px)', opacity: 0 });
+const rightStyle = style({ transform: 'translateX(60px)', opacity: 0 });
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   host: { class: 'mat-typography' },
-  animations: [ROUTER_ANIM],
+  animations:   [
+    trigger('routerAnim', [
+      transition('* => from-left', [
+        group([
+          query(':enter', [leftStyle, animate(animDuration)]),
+          query(':leave', [animate(animDuration, rightStyle)]),
+        ]),
+      ]),
+      transition('* => from-right', [
+        group([
+          query(':enter', [rightStyle, animate(animDuration)]),
+          query(':leave', [animate(animDuration, leftStyle)]),
+        ]),
+      ]),
+    ]),
+  ],
 })
 export class AppComponent implements OnInit, OnDestroy {
   private titleSub: Subscription;

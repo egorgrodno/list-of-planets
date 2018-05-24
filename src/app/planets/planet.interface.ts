@@ -1,6 +1,6 @@
-import { CommonEntity, IsoDateType, UriType } from '../shared/entity.service';
+import { CommonEntity, IsoDateType, UriType } from '../shared/entity.interface';
 
-export interface PlanetInterface extends CommonEntity {
+export declare interface PlanetInterface extends CommonEntity {
   climate: string; // The climate of this planet. Comma-seperated if diverse.
   diameter: string; // The diameter of this planet in kilometers.
   films: UriType[]; // An array of Film URL Resources that this planet has appeared in.

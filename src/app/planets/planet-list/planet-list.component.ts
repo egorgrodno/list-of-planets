@@ -9,13 +9,13 @@ import {
 } from '@angular/core';
 import { MatPaginator, MatTable } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 
 import { AppService } from '../../shared/app.service';
 import { DataSourceInputDataInterface, TableDataSource } from '../../shared/table-data-source';
 import { EntityService } from '../../shared/entity.service';
-import { LOADER_ANIM, TABLE_ROW_ANIM } from './planet-list.animations';
 import { MockEntityService } from '../../shared/mock-entity.service';
-import { PlanetInterface } from '../planet.interface';
+import { PlanetModel } from '../planet.model';
 
 const API_PAGE_SIZE_OPTIONS = [10];
 const MOCK_DATA_PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -29,7 +29,23 @@ const PAGE_SIZE_PROP_NAME = 'ps';
   styleUrls: ['./planet-list.component.scss'],
   host: { class: 'router-anim-target' },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: [LOADER_ANIM, TABLE_ROW_ANIM],
+  animations: [
+    trigger('tableRowAnim', [
+      transition('* <=> *', [
+        query(
+          ':enter',
+          [style({ opacity: 0 }), stagger(30, [animate('150ms ease-out', style({ opacity: 1 }))])],
+          { optional: true },
+        ),
+      ]),
+    ]),
+    trigger('loaderAnim', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('150ms ease-out', style({ opacity: 1 })),
+      ]),
+    ]),
+  ],
 })
 export class PlanetListComponent implements OnInit, OnDestroy {
   public displayedColumns = [
@@ -40,7 +56,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
     'diameter',
     'surface_water',
   ];
-  public dataSource: TableDataSource<PlanetInterface>;
+  public dataSource: TableDataSource<PlanetModel>;
   public pageSizeOptions: number[];
 
   private useApiSub: Subscription;
@@ -68,12 +84,13 @@ export class PlanetListComponent implements OnInit, OnDestroy {
 
       this.pageSizeOptions = useApi ? API_PAGE_SIZE_OPTIONS : MOCK_DATA_PAGE_SIZE_OPTIONS;
 
-      this.dataSource = new TableDataSource<PlanetInterface>(
+      this.dataSource = new TableDataSource<PlanetModel>(
         'planets',
         useApi ? this.entityService : this.mockEntityService,
         this.paginator,
         this.filterEl,
         this.mapParamsToInputData(this.activatedRoute.snapshot.params),
+        PlanetModel.create,
       );
 
       this.dataSourceInputSub = this.dataSource.onInput.subscribe((inputData) =>
@@ -87,7 +104,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
     this.dataSourceInputSub.unsubscribe();
   }
 
-  public getPlanetId(planet: PlanetInterface): string {
+  public getPlanetId(planet: PlanetModel): string {
     return this.entityService.extractId('planets', planet.url);
   }
 
@@ -125,7 +142,7 @@ export class PlanetListComponent implements OnInit, OnDestroy {
 
   /**
    * Accepts inputData: DataSourceInputDataInterface and transforms it to params object
-   * This transformation isn't necessary, but I added it to make url shorter
+   * This transformation is necessary, since closure compiler will rename the props
    */
   public mapInputDataToParams(inputData: DataSourceInputDataInterface): object {
     return {

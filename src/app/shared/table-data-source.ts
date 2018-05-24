@@ -4,7 +4,8 @@ import { ElementRef } from '@angular/core';
 import { MatPaginator } from '@angular/material';
 import { debounceTime, filter, map, switchMap, tap } from 'rxjs/operators';
 
-import { CommonEntity, EntityNameType, EntityService } from './entity.service';
+import { CommonEntity } from './entity.interface';
+import { EntityNameType, EntityService } from './entity.service';
 import { MockEntityService } from './mock-entity.service';
 
 const DEBOUNCE_TIME_DEFAULT = 350;
@@ -28,6 +29,7 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
     private paginator: MatPaginator,
     private filterEl: ElementRef,
     private inputDataDefault: DataSourceInputDataInterface,
+    private responseDataItemMapFn: (T) => T,
   ) {
     super();
     /**
@@ -78,6 +80,7 @@ export class TableDataSource<T extends CommonEntity> extends DataSource<T> {
           inputData.filter,
           inputData.pageNumber,
           inputData.pageSize,
+          this.responseDataItemMapFn,
         ),
       ),
       tap((res) => (this.paginator.length = res.count)),

@@ -1,0 +1,17 @@
+{
+  "angularCompilerOptions": {
+    "annotationsAs": "static fields",
+    "annotateForClosureCompiler": true
+  },
+  "compilerOptions": {
+    "module": "es2015",
+    "moduleResolution": "node",
+    "target": "es6",
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "outDir": "cc-compiled",
+    "declaration": true
+  },
+  "exclude": ["dist", "e2e", "node_modules", "src"],
+  "files": ["cc-src/bootstrap.ts"]
+}

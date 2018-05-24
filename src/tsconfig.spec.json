@@ -12,6 +12,9 @@
     "test.ts",
     "polyfills.ts"
   ],
+  "exclude": [
+    "bootstrap.ts"
+  ],
   "include": [
     "**/*.spec.ts",
     "**/*.d.ts"

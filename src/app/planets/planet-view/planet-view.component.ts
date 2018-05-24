@@ -8,7 +8,7 @@ import { pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AppService } from '../../shared/app.service';
 import { EntityService } from '../../shared/entity.service';
 import { MockEntityService } from '../../shared/mock-entity.service';
-import { PlanetInterface } from '../planet.interface';
+import { PlanetModel } from '../planet.model';
 
 export const PLANET_VIEW_ID_PARAM = 'id';
 
@@ -22,7 +22,7 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
   private componentLife$ = new Subject<void>();
 
   public planetNotFound: boolean;
-  public planet: PlanetInterface;
+  public planet: PlanetModel;
   public title: string;
 
   constructor(
@@ -49,6 +49,7 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
           (this.appService.useApi$.value ? this.entityService : this.mockEntityService).viewEntity(
             'planets',
             id as string,
+            PlanetModel.create,
           ),
         ),
       )
@@ -60,7 +61,7 @@ export class PlanetViewComponent implements OnInit, OnDestroy {
     this.componentLife$.complete();
   }
 
-  public setPlanet(newPlanet: PlanetInterface): void {
+  public setPlanet(newPlanet: PlanetModel): void {
     if (newPlanet) {
       this.planet = newPlanet;
       this.appService.setTitle(`Planet "${newPlanet.name}"`);

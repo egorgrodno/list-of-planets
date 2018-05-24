@@ -5,6 +5,11 @@
 /tmp
 /out-tsc
 
+# cc output
+/cc-src
+/cc-compiled
+/cc-dist
+
 # dependencies
 /node_modules
 

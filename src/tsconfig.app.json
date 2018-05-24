@@ -9,6 +9,7 @@
     "types": []
   },
   "exclude": [
+    "bootstrap.ts",
     "src/test.ts",
     "**/*.spec.ts"
   ]
